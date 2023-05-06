@@ -115,10 +115,30 @@ const Dashboard: React.FC = () => {
   };
 
   fetchData();
-}, [accessToken, navigate]);
+  }, [accessToken, navigate]);
+  
+
+  const fetchReadme = async () => {
+  try {
+    const response = await axios.post('http://localhost:5000/api/generate-readme', {
+      accessToken,
+      username: userProfile?.login,
+      topLanguages,
+    });
+    const readme = response.data.readme;
+    console.log('Generated readme:', readme);
+  } catch (error) {
+    console.error('Error generating readme:', error);
+  }
+};
 
   return (
+
+    
     <div>
+
+      <button onClick={fetchReadme}>Generate README</button>
+
       <h1>Dashboard</h1>
       {userProfile && (
         <div>
@@ -145,6 +165,7 @@ const Dashboard: React.FC = () => {
         ))}
       </ul>
     </div>
+
   );
 };
 
