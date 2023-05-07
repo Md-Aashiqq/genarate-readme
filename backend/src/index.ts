@@ -8,7 +8,6 @@ config({});
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
-
 if (!CLIENT_ID || !CLIENT_SECRET) {
   throw new Error('Missing CLIENT_ID or CLIENT_SECRET');
 }
@@ -22,7 +21,6 @@ app.use('/api', githubRoutes);
 
 app.post('/auth/github', async (req, res) => {
   const { code } = req.body;
-
   try {
     const response = await axios.post<{ access_token: string }>('https://github.com/login/oauth/access_token',
       {
@@ -35,8 +33,8 @@ app.post('/auth/github', async (req, res) => {
 
     const accessToken = response.data.access_token;
     res.status(200).json({ accessToken });
-  } catch (error) {
-    console.error('Error fetching access token:', error);
+  } catch (error: any) {
+    console.error('Error fetching access token:', error.message);
     res.status(500).json({ error: 'Error fetching access token' });
   }
 });

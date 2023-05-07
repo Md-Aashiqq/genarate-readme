@@ -15,9 +15,10 @@ export interface Language {
   language: string;
   count: number;
 }
-
 export interface GithubData {
   userProfile: UserProfile;
   repositories: Repository[];
   topLanguages: Language[];
+  pullRequestsCount?: number;
+  contributionsCount?: number;
 }

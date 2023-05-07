@@ -25,7 +25,10 @@ const Dashboard: React.FC = () => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [repositories, setRepositories] = useState<Repository[]>([]);
-  const [languages, setLanguages] = useState<{ [key: string]: number }>({});
+  // const [languages, setLanguages] = useState<{ [key: string]: number }>({});
+  const [pullRequestsCount, setPullReqCount] = useState<number>(0);
+  const [contributionsCount, setContributionCount] = useState<number>(0);
+
 
   const [topLanguages, setTopLanguages] = useState<Language[]>([]);
 
@@ -56,44 +59,7 @@ const Dashboard: React.FC = () => {
     }
   }, [code, navigate]);
 
-//   useEffect(() => {
-//   const fetchData = async () => {
-//     if (!accessToken) {
-//       return;
-//     }
 
-//     const instance = axios.create({
-//       baseURL: 'https://api.github.com',
-//       headers: { Authorization: `token ${accessToken}` }, // Change "Bearer" to "token"
-//     });
-
-//     try {
-//       const userResponse = await instance.get<UserProfile>('/user');
-//       setUserProfile(userResponse.data);
-
-//       const reposResponse = await instance.get<Repository[]>('/user/repos', {
-//         params: { per_page: 100 },
-//       });
-//       setRepositories(reposResponse.data);
-
-//       // Count the languages used in the repositories
-//       const languageCount: { [key: string]: number } = {};
-//       reposResponse.data.forEach((repo) => {
-//         if (repo.language) {
-//           languageCount[repo.language] = (languageCount[repo.language] || 0) + 1;
-//         }
-//       });
-//       setLanguages(languageCount);
-      
-//     } catch (error) {
-//       console.error('Error fetching data:', error);
-//       navigate('/');
-//     }
-//   };
-
-//   fetchData();
-// }, [accessToken, navigate]);
-  
   useEffect(() => {
   const fetchData = async () => {
     if (!accessToken) {
@@ -105,9 +71,11 @@ const Dashboard: React.FC = () => {
       const data = response.data;
       setUserProfile(data.userProfile);
       setRepositories(data.repositories);
-
       // Update the topLanguages state variable
       setTopLanguages(data.topLanguages);
+      setPullReqCount(data.pullRequestsCount);
+      setContributionCount(data.contributionsCount)
+      console.log(data);
     } catch (error) {
       console.error('Error fetching data:', error);
       navigate('/');
@@ -124,6 +92,8 @@ const Dashboard: React.FC = () => {
       accessToken,
       username: userProfile?.login,
       topLanguages,
+      pullRequestsCount,
+      contributionsCount,
     });
     const readme = response.data.readme;
     console.log('Generated readme:', readme);

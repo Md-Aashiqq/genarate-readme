@@ -14,10 +14,10 @@ export async function getGithubData(req: Request, res: Response) {
 }
 
 export async function getReadme(req: Request, res: Response) {
-  const { accessToken, username, topLanguages } = req.body;
+  const { accessToken, username, topLanguages, contributionsCount, pullRequestsCount } = req.body;
 
   try {
-    const readme = await generateReadme(username, topLanguages);
+    const readme = await generateReadme(username, topLanguages, pullRequestsCount, contributionsCount);
     res.status(200).json({ readme });
   } catch (error) {
     console.error('Error generating readme:', error);
