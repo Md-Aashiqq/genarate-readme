@@ -1,0 +1,52 @@
+// _flat-ui-form.scss
+.flat-form {
+    width: 100%;
+  label {
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    background-color: transparent;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    transition: border-color 0.3s;
+
+    &:focus {
+      outline: none;
+      border-color: darken(#ccc, 10%);
+    }
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: none;
+    background-color: blue;
+    color: white;
+    font-size: 1rem;
+    text-transform: uppercase;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: darken(blue, 10%);
+    }
+  }
+
+  .error-message {
+    color: red;
+    font-size: 0.8rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+  }
+}

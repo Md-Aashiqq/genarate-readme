@@ -1,0 +1,28 @@
+.github-list {
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  background-color: #ffffff;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+
+  &__item {
+    border-top: 1px solid #e1e4e8;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    margin-right: 16px;
+  }
+
+  &__content {
+    flex-grow: 1;
+  }
+}

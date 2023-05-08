@@ -1,0 +1,83 @@
+// .login_page{
+
+//   display: grid;
+//   place-items: center;
+//   height: 100vh;
+
+//   .login_container{
+//     background-color: red;
+//     width: 30%;
+//     padding: 1rem;
+//   }
+// }
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Roboto', sans-serif;
+  background-color: #0d1117;
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #161b22;
+  padding: 2rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  width: 350px;
+}
+
+.title {
+  font-size: 1.5rem;
+  color: #c9d1d9;
+  margin-bottom: 1.5rem;
+}
+
+.input-field {
+  display: block;
+  background-color: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  width: 100%;
+  color: #c9d1d9;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  outline: none;
+
+  &:focus {
+    border-color: #58a6ff;
+  }
+}
+
+.github-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $sucessColor;
+  color: $primaryColor;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 6px;
+  width: 100%;
+  height: 2.5rem;
+  margin-top: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  outline: none;
+  border: 0;
+  &:hover {
+    background-color: #2ea043;
+  }
+}
+
+.icon {
+  margin-right: 0.5rem;
+}

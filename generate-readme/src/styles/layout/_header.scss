@@ -1,0 +1,19 @@
+// src/components/Header.scss
+.header {
+  background-color: #8ec6e7; /* This sets a fallback color in case the image doesn't load or isn't available */
+  height: 60px; /* Change this to adjust the height of your header */
+
+  .menu-button {
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+
+    &:hover {
+      background-color: darken(#007bff, 5%);
+    }
+
+    &:active {
+      background-color: darken(#007bff, 10%);
+    }
+  }
+}

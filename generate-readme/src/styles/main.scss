@@ -1,0 +1,163 @@
+@import "utils/variables";
+@import "utils/mixins";
+@import "base/reset";
+@import "base/typography";
+@import "components/buttons";
+@import "components/flat_ui";
+@import "components/dropdown";
+@import "components/card";
+@import "layout/header";
+@import "layout/LoginPage";
+@import "layout/dashboard";
+
+body {
+  background-color: $background;
+  color: $primaryColor;
+}
+// .card {
+//   display: flex;
+//   aspect-ratio: 2 / 1;
+//   width: 100%;
+//   max-width: 16rem;
+//   flex-direction: column;
+//   align-items: center;
+//   justify-content: center;
+//   border-radius: 1rem;
+//   border: 1px solid transparent;
+//   padding: 2rem;
+//   text-align: center;
+//   background: padding-box var(--bg-color), border-box var(--border-color);
+
+//   .text {
+//   font-size: 1.25rem;
+//   font-weight: 500;
+//   color: #ffffff;
+// }
+// }
+
+// .github-card {
+//   width: 100%;
+//   max-width: 16rem;
+//   border-radius: 1rem;
+//   padding: 1.5rem;
+//   backdrop-filter: blur(15px);
+//   background-color: rgba(255, 255, 255, 0.1);
+//   position: relative;
+//   border: 1px solid rgba(255, 255, 255, 0.2);
+//   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+//   &:before {
+//     content: "";
+//     position: absolute;
+//     top: -1px;
+//     right: -1px;
+//     bottom: -1px;
+//     left: -1px;
+//     border-radius: 1rem;
+//     background: linear-gradient(
+//       145deg,
+//       rgba(0, 255, 123, 0.4) 0%,
+//       rgba(0, 255, 123, 0.4) 33.33%,
+//       rgba(0, 255, 123, 0.2) 66.67%,
+//       rgba(0, 255, 123, 0.2) 100%
+//     );
+//     z-index: -1;
+//     opacity: 0.6;
+//   }
+// }
+
+// .title {
+//   font-size: 1.25rem;
+//   font-weight: 500;
+//   color: #fff;
+//   margin-bottom: 0.5rem;
+// }
+
+// .content {
+//   font-size: 1rem;
+//   color: #ccc;
+// }
+
+// .github-card {
+//   width: 100%;
+//   max-width: 16rem;
+//   border-radius: 1rem;
+//   padding: 1.5rem;
+//   backdrop-filter: blur(10px);
+//   background-color: rgba(255, 255, 255, 0.8);
+//   position: relative;
+
+//   &:before {
+//     content: "";
+//     position: absolute;
+//     top: -1px;
+//     right: -1px;
+//     bottom: -1px;
+//     left: -1px;
+//     border: 2px solid transparent;
+//     border-radius: 1rem;
+//     background: linear-gradient(
+//       145deg,
+//       #a8f5af 0%,
+//       #a8f5af 33.33%,
+//       #d5ffd8 66.67%,
+//       #d5ffd8 100%
+//     );
+//     z-index: -1;
+//     opacity: 0.8;
+//   }
+// }
+
+// .title {
+//   font-size: 1.25rem;
+//   font-weight: 500;
+//   color: #333;
+//   margin-bottom: 0.5rem;
+// }
+
+// .content {
+//   font-size: 1rem;
+//   color: #666;
+// }
+
+// .github-card {
+//   width: 100%;
+//   max-width: 16rem;
+//   border-radius: 1rem;
+//   padding: 1.5rem;
+//   backdrop-filter: blur(10px);
+//   background-color: rgba(255, 255, 255, 0.8);
+//   position: relative;
+
+//   &:before {
+//     content: "";
+//     position: absolute;
+//     top: -1px;
+//     right: -1px;
+//     bottom: -1px;
+//     left: -1px;
+//     border: 2px solid transparent;
+//     border-radius: 1rem;
+//     background: linear-gradient(
+//       145deg,
+//       #3c3b6e 0%,
+//       #3c3b6e 33.33%,
+//       #18172c 66.67%,
+//       #18172c 100%
+//     );
+//     z-index: -1;
+//     opacity: 0.8;
+//   }
+
+//   .title {
+//     font-size: 1.25rem;
+//     font-weight: 500;
+//     color: #333;
+//     margin-bottom: 0.5rem;
+//   }
+
+//   .content {
+//     font-size: 1rem;
+//     color: #666;
+//   }
+// }

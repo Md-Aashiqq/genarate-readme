@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import React, { CSSProperties, useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import Dropdown from "./Dropdown";
+import Card from "./Card";
 
 interface UserProfile {
   name: string;
@@ -20,94 +22,135 @@ interface Language {
   count: number;
 }
 
-
 const Dashboard: React.FC = () => {
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [repositories, setRepositories] = useState<Repository[]>([]);
-  // const [languages, setLanguages] = useState<{ [key: string]: number }>({});
   const [pullRequestsCount, setPullReqCount] = useState<number>(0);
   const [contributionsCount, setContributionCount] = useState<number>(0);
 
-
   const [topLanguages, setTopLanguages] = useState<Language[]>([]);
-
+  const [generatedReadme, setGeneratedReadme] = useState<string | null>(null);
 
   const navigate = useNavigate();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const code = searchParams.get('code') || '';
+  const code = searchParams.get("code") || "";
 
   useEffect(() => {
     const fetchAccessToken = async () => {
       try {
-        const response = await axios.post<{ accessToken: string }>('http://localhost:5000/auth/github', {
-          code,
-        });
+        const response = await axios.post<{ accessToken: string }>(
+          "http://localhost:5000/auth/github",
+          {
+            code,
+          }
+        );
 
         setAccessToken(response.data.accessToken);
+        localStorage.setItem("accessToken", response.data.accessToken);
       } catch (error) {
-        console.error('Error fetching access token:', error);
-        navigate('/');
+        console.error("Error fetching access token:", error);
+        navigate("/");
       }
     };
 
     if (code) {
       fetchAccessToken();
     } else {
-      navigate('/');
+      navigate("/");
     }
   }, [code, navigate]);
 
-
   useEffect(() => {
-  const fetchData = async () => {
-    if (!accessToken) {
-      return;
-    }
+    const fetchData = async () => {
+      if (!accessToken) {
+        return;
+      }
 
+      try {
+        const response = await axios.post(
+          "http://localhost:5000/api/github-data",
+          { accessToken }
+        );
+        const data = response.data;
+        setUserProfile(data.userProfile);
+        setRepositories(data.repositories);
+        // Update the topLanguages state variable
+        setTopLanguages(data.topLanguages);
+        setPullReqCount(data.pullRequestsCount);
+        setContributionCount(data.contributionsCount);
+        console.log(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        navigate("/");
+      }
+    };
+
+    fetchData();
+  }, [accessToken, navigate]);
+
+  const fetchReadme = async () => {
     try {
-      const response = await axios.post('http://localhost:5000/api/github-data', { accessToken });
-      const data = response.data;
-      setUserProfile(data.userProfile);
-      setRepositories(data.repositories);
-      // Update the topLanguages state variable
-      setTopLanguages(data.topLanguages);
-      setPullReqCount(data.pullRequestsCount);
-      setContributionCount(data.contributionsCount)
-      console.log(data);
+      const response = await axios.post(
+        "http://localhost:5000/api/generate-readme",
+        {
+          accessToken,
+          username: userProfile?.login,
+          topLanguages,
+          pullRequestsCount,
+          contributionsCount,
+        }
+      );
+      const readme = response.data.readme;
+      setGeneratedReadme(readme);
+      console.log("Generated readme:", readme);
     } catch (error) {
-      console.error('Error fetching data:', error);
-      navigate('/');
+      console.error("Error generating readme:", error);
     }
   };
 
-  fetchData();
-  }, [accessToken, navigate]);
-  
+  const publishReadme = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/publish-readme", {
+        accessToken: accessToken,
+        username: userProfile?.login,
+        readmeContent: generatedReadme,
+      });
 
-  const fetchReadme = async () => {
-  try {
-    const response = await axios.post('http://localhost:5000/api/generate-readme', {
-      accessToken,
-      username: userProfile?.login,
-      topLanguages,
-      pullRequestsCount,
-      contributionsCount,
-    });
-    const readme = response.data.readme;
-    console.log('Generated readme:', readme);
-  } catch (error) {
-    console.error('Error generating readme:', error);
-  }
-};
+      alert("Successfully published README.md");
+    } catch (error) {
+      console.error("Error publishing README.md:", error);
+      alert("Failed to publish README.md");
+    }
+  };
 
   return (
+    <div className="dashboard_page">
+      <nav className="heeader">
+        <div className="logo">
+          <img src="/logo.jpg" alt="GitHub Logo" />
+        </div>
 
-    
-    <div>
+        <div className="nav-items">
+          <Dropdown
+            avatarUrl={userProfile?.avatar_url}
+            username={userProfile?.name}
+          />
+        </div>
+      </nav>
 
-      <button onClick={fetchReadme}>Generate README</button>
+      <div className="main_section">
+        <div className="left_section card"></div>
+
+        <div className="right_section">
+          <Card />
+        </div>
+      </div>
+
+      {/* <button onClick={fetchReadme}>Generate README</button>
+
+      <button onClick={publishReadme}>Publish README</button>
 
       <h1>Dashboard</h1>
       {userProfile && (
@@ -133,9 +176,8 @@ const Dashboard: React.FC = () => {
             {repo.name} - ⭐ {repo.stargazers_count}
           </li>
         ))}
-      </ul>
+      </ul> */}
     </div>
-
   );
 };
 

@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { Configuration, OpenAIApi } from "openai";
+import base64 from 'base-64';
+
 
 import { UserProfile, Repository, Language, GithubData } from '../utils/types';
 
@@ -54,15 +56,6 @@ export async function generateReadme(username: string, topLanguages: Language[],
   });
   const openai = new OpenAIApi(configuration);
 
-
-  // const prompt = `Create an awesome and more creative GitHub readme for a user named ${username}, who primarily uses the following programming languages: ${languages}. and uses emoji also . It also Short Description and Tech stack and some stats like pull requests and contributions and pullrequest count is ${pullRequestsCount} and contributions count is ${contributionsCount} .`;
-  //   const prompt = `Create a creative and fun GitHub readme for a user named ${username} using emojis, graphs, and the following stats:
-  // - Top 5 programming languages: ${topLanguages.map((lang) => `${lang.language} (${lang.count})`).join(', ')}
-  // - Pull request count: ${pullRequestsCount}
-  // - Total contributions: ${contributionsCount}
-
-  //   Make sure the readme is engaging and visually appealing!`;
-
   const prompt = `Create an exceptionally creative, stylish, and engaging GitHub readme for a user named ${username} with the following format and stats:
   
 - Greetings,
@@ -98,3 +91,84 @@ Include emojis, graphs, and visually appealing elements to make the readme engag
     throw new Error('Error generating readme');
   }
 }
+
+
+export async function publishReadme(accessToken: string, username: string, readmeContent: string): Promise<void> {
+  const instance = axios.create({
+    baseURL: 'https://api.github.com',
+    headers: { Authorization: `token ${accessToken}` },
+  });
+
+  try {
+    // Step 1: Check if the repository exists
+    let repoExists = false;
+    try {
+      await instance.get(`/repos/${username}/${username}`);
+      repoExists = true;
+    } catch (error: any) {
+      if (error.response?.status !== 404) {
+        throw error;
+      }
+    }
+
+    // Step 2: Create a new repository if it doesn't exist
+    if (!repoExists) {
+      await instance.post('/user/repos', {
+        name: username,
+        description: 'My awesome GitHub profile README.md!',
+        auto_init: true,
+      });
+    }
+
+    // Step 2: Get the latest commit SHA
+    const commitResponse = await instance.get(`/repos/${username}/${username}/git/refs/heads/main`);
+    const commitSha = commitResponse.data.object.sha;
+
+    // Step 3: Get the latest tree SHA
+    const treeResponse = await instance.get(`/repos/${username}/${username}/git/commits/${commitSha}`);
+    const treeSha = treeResponse.data.tree.sha;
+
+    // Step 4: Create a new blob with the README.md content
+    const newFileContent = Buffer.from(readmeContent, 'utf-8').toString('base64');
+    const blobResponse = await instance.post(`/repos/${username}/${username}/git/blobs`, {
+      content: newFileContent,
+      encoding: 'base64',
+    });
+    const blobSha = blobResponse.data.sha;
+
+    // Step 5: Create a new tree with the README.md file
+    const newTreeResponse = await instance.post(`/repos/${username}/${username}/git/trees`, {
+      base_tree: treeSha,
+      tree: [
+        {
+          path: 'README.md',
+          mode: '100644',
+          type: 'blob',
+          sha: blobSha,
+        },
+      ],
+    });
+    const newTreeSha = newTreeResponse.data.sha;
+
+
+    // Step 6: Create a new commit
+    const newCommitResponse = await instance.post(`/repos/${username}/${username}/git/commits`, {
+      message: 'Create README.md for GitHub profile',
+      tree: newTreeSha,
+      parents: [commitSha],
+    });
+    const newCommitSha = newCommitResponse.data.sha;
+
+    // Step 7: Update the reference to point to the new commit
+    await instance.patch(`/repos/${username}/${username}/git/refs/heads/main`, {
+      sha: newCommitSha,
+    });
+
+    console.log('Successfully published README.md');
+  } catch (error: any) {
+    console.error('Error publishing README.md:', error);
+    console.error('Error details:', error.response?.data);
+    throw new Error('Error publishing README.md');
+  }
+}
+
